@@ -1,0 +1,111 @@
+<div class="row">
+  <div [ngClass]="{'col-md-8 pr-0': modoEditar, 'col-md-12': !modoEditar}">
+    <div class="card rounded shadow-sm">
+      <form [formGroup]="form">
+        <div class="p-3">
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>Titulo</label>
+              <input type="text" class="form-control" [ngClass]="cssValidator(f.tema)" formControlName="tema"
+                placeholder="Insira o Tema" [(ngModel)]="evento.tema">
+              <div *ngIf="f.tema.errors?.required" class="invalid-feedback">
+                Titulo é obrigatório.
+              </div>
+              <div *ngIf="f.tema.errors?.minlength" class="invalid-feedback">
+                Titulo deve ter no mínimo 4 caracteres.
+              </div>
+              <div *ngIf="f.tema.errors?.maxlength" class="invalid-feedback">
+                Titulo deve ter no máximo 50 caracteres.
+              </div>
+            </div>
+            <div class="form-group col-md-4">
+              <label>Prazo</label>
+              <input type="datetime" class="form-control" [ngClass]="cssValidator(f.dataEvento)"
+                value="{{evento.dataEvento | DateFormatPipe}}" bsDatepicker [bsConfig]="bsConfig"
+                formControlName="dataEvento" placeholder="" [(ngModel)]="evento.dataEvento">
+              <div *ngIf="f.dataEvento.errors?.required && f.dataEvento.touched" class="invalid-feedback">
+                Prazo é obrigatório.
+              </div>
+            </div>
+
+            <div class="form-group col-md-2">
+              <label>Status</label>
+              <select formControlName="status" class="form-control"
+                [ngClass]="{ 'is-invalid': f.status.errors && f.status.touched }">
+                <option value="No Prazo" [selected]="true">No Prazo</option>
+                <option value="Atrasada">Atrasada</option>
+                <option value="Fechada">Fechada</option>
+              </select>
+              <div *ngIf="f.status.errors && f.status.touched" class="invalid-feedback">
+                <div *ngIf="f.status.errors.required">status é obrigatório</div>
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-12">
+              <label>Descrição</label>
+              <textarea class="form-control" [ngClass]="cssValidator(f.descricao)" formControlName="descricao"
+                placeholder="" [(ngModel)]="evento.descricao" rows="5"></textarea>
+              <div *ngIf="f.descricao.errors?.required && f.descricao.touched" class="invalid-feedback">
+                Descrição é obrigatório.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="d-flex">
+            <button class="btn btn-outline-secondary mr-auto border" (click)="resetForm()">
+              Cancelar Alteração
+            </button>
+            <button class="btn btn-success" [disabled]="!form.valid" (click)="salvarEvento()">
+              Salvar Tarefa
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+
+  </div>
+  <div class="col-md-4" *ngIf="modoEditar">
+    <div [formGroup]="form" class="card-evento-view shadow-sm">
+      <div class="form-row">
+        <div class="form-group m-0">
+          <input type="file" #file (change)="onFileChange($event)" class="form-control is-invalid" placeholder=""
+            style="display: none">
+        </div>
+      </div>
+      <div class="card profile-card-2" style="min-height: 350px; max-height: 350px;">
+
+        <div class="card-body pt-3">
+          <h4>{{evento.tema}}</h4>
+          <p class="card-text">
+            <b>Descrição:</b> {{evento.descricao}}
+            <br>
+            <b>Prazo:</b> {{evento.dataEvento | DateFormatPipe}}
+          </p>
+          <hr>
+          <p class="card-text">           
+          </p>
+          <div class="row">
+            <div class="icon-block col-md-8 iconesSociais">
+              <a href="">
+                <i class=""></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<br>
+
+<ng-template #template>
+  <div class="modal-body text-center">
+    <p>Tem certeza que quer deletar essa tarefa ? </p>
+    <button type="button" class="btn btn-default">Sim</button>
+    <button type="button" class="btn btn-primary">Não</button>
+  </div>
+</ng-template>
